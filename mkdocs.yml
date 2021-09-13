@@ -1,0 +1,45 @@
+site_name: Mi.py
+
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/git-alt
+  logo: https://s3.akarinext.org/assets/*/mi.py/mi.py.png
+  favicon: https://s3.akarinext.org/assets/*/mi.py.png
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      primary: white
+      scheme: default
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      primary: light green
+      scheme: slate
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+
+repo_url: https://github.com/yupix/mi.py
+repo_name: mi.py
+
+plugins:
+  - search
+  - git-revision-date-localized
+  - git-authors
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - admonition
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/yupix/mi.py
+  copyright: Copyright &copy; 2021 yupix
+
+
+
+extra_css:
+  - https://s3.akarinext.org/assets/*/custom.css
