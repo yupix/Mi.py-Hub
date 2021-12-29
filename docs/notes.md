@@ -2,35 +2,30 @@
 
 このページではmi.pyを使用するべきで注意すべき点を記しています。
 
-## 受け取ったノートをそのまま送信する（画像がある場合）
+## on_mentionを作成した際にmention_commandが動かない
 
-!!! tip
-    これはMisskeyのドライブで仕様上発生する問題です。
+!!! warning
+    この機能はv2.0.0で追加されます
 
-```python
-async def on_message(ctx):
-    await ctx.send()
-```
-
-受け取ったノートをそのままオウム返しにしたい場合があると思います。上記のコードで確かにオウム返しは可能です。
-しかしながら、画像がある場合はどうでしょうか？Misskeyではアップロードした画像をユーザーが持っているDriveに関連付けて保存しています。
-結果的にオウム返しを行おうとした際に自分のDriveに他人がアップロードした画像のIDが存在しないため、何かテキストやアンケート等の主要なコンテンツが存在しないと以下のようにエラーになります。
+以下のようなコードがある場合 `mention_command` デコレーターで作成したコマンドが正常に動作しなくなります。
 
 ```python
-async def on_message(ctx):
-    await ctx.send()
 
->>> mi.exception.ContentRequired: ノートの送信にはtext, file, renote またはpollのいずれか1つが無くてはいけません
+async def on_mention(self, mention):
+    pass
+
+...
+
+@commands.mention_command(regex=r'おはよう(.*)さん')
+async def hello_user(self, ctx):
+    pass
 ```
 
-解決策は以下の通りです。
+この問題が発生するのは `on_mention` イベントを上書きした際にコマンドを実行するための呼び出しがなくなるためです。
+そのため、以下のコードを付け足すことで解消できます
 
 ```python
-async def on_message(ctx):
-    await ctx.add_file(url=ctx.files[0].url).send()
+async def on_mention(self, mention):
+    ...
+    await self.progress_command(mention)
 ```
-`files[0]`の`[0]`は複数ファイルがある場合は先頭のファイルになってしまいますが、今回は1つの画像のみ対応という体で話を進ませていただきます。
-そこから、urlを取得し、`add_file`メソッドに`url`引数で渡しそのnoteオブジェクトを送信することで画像が入っていてもオウム返しができるようになります。
-
-!!! todo
-    この問題はいずれFrameWork側で対処できるようにする予定があります

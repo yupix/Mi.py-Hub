@@ -35,10 +35,10 @@ class ExampleBot(Bot):
             self.load_extension(cog)
 
     async def on_ready(self, ws):
-        print(f'{client.i.name}にログインしました')
+        print(f'{client.i.username}にログインしました')
 
-    async def on_message(self, ctx):
-        print(ctx.text)
+    async def on_message(self, note):
+        print(note.content)
 
 if __name__ == '__main__':
     bot = ExampleBot('!')
@@ -56,7 +56,7 @@ class BasicCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.mention_command(regex=r'おはよう(.*)さん')
     async def hey(self, ctx: Note):
         print(ctx.content)
 
